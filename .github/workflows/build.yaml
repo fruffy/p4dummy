@@ -1,0 +1,33 @@
+name: build
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# Cancel any preceding run on the pull request.
+concurrency:
+  group: p4dummy-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      IMAGE_TYPE: test
+    steps:
+    - uses: actions/checkout@v1
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ matrix.os }}
+        max-size: 1000M
+    - name: Install P4C with P4Dummy.
+      run: |
+        git clone https://github.com/p4lang/p4c $GITHUB_WORKSPACE/../p4c
+        cd $GITHUB_WORKSPACE/../p4c
+        git submodule update --init --recursive
+        mkdir -p $GITHUB_WORKSPACE/../p4c/extensions/
+        cp -r $GITHUB_WORKSPACE $GITHUB_WORKSPACE/../p4c/extensions/p4dummy
+        ln -sf $GITHUB_WORKSPACE $GITHUB_WORKSPACE/../p4c/extensions/p4dummy
+        $GITHUB_WORKSPACE/../p4c/tools/ci-build.sh
