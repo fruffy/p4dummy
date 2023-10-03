@@ -3,6 +3,8 @@
 
 #include "frontends/common/options.h"
 
+#include "frontends/common/parser_options.h"
+
 namespace P4Dummy {
 
 class DummyOptions : public CompilerOptions {

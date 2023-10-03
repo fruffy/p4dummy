@@ -1,11 +1,23 @@
-#include <fstream>
+#include <stdlib.h>
+#include <iostream>
 
 #include "frontends/common/constantFolding.h"
 #include "frontends/common/parseInput.h"
+#include "frontends/p4/frontend.h"
 #include "frontends/p4/toP4/toP4.h"
 #include "ir/ir.h"
 #include "options.h"
 #include "test/gtest/helpers.h"
+#include "frontends/common/options.h"
+#include "frontends/common/parser_options.h"
+#include "frontends/common/resolveReferences/referenceMap.h"
+#include "frontends/p4/typeChecking/typeChecker.h"
+#include "frontends/p4/typeMap.h"
+#include "ir/pass_manager.h"
+#include "ir/visitor.h"
+#include "lib/compile_context.h"
+#include "lib/cstring.h"
+#include "lib/error.h"
 
 namespace P4Dummy {
 
