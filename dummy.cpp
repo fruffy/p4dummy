@@ -132,18 +132,16 @@ V1Switch(p(), vrfy(), ingress(), egress(), update(), deparser()) main;)";
 int main(int argc, char *const argv[]) {
     AutoCompileContext autoP4DummyContext(new P4Dummy::P4DummyContext);
     auto &options = P4Dummy::P4DummyContext::get().options();
-    options.langVersion = CompilerOptions::FrontendVersion::P4_16;
 
     if (options.process(argc, argv) == nullptr) {
         return EXIT_FAILURE;
     }
 
-    const IR::P4Program *program = nullptr;
-    if (options.file == nullptr && !options.useFixed) {
-        options.usage();
-        return EXIT_FAILURE;
+    if (!options.useFixed) {
+        options.setInputFile();
     }
 
+    const IR::P4Program *program = nullptr;
     if (options.useFixed) {
         program = P4Dummy::parseDummyP4(options);
     } else {
