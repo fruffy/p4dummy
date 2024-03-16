@@ -138,6 +138,8 @@ int main(int argc, char *const argv[]) {
         return EXIT_FAILURE;
     }
 
+    options.file = argv[0];
+
     const IR::P4Program *program = nullptr;
     if (options.file == nullptr && !options.useFixed) {
         options.usage();
