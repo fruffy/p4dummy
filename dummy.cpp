@@ -137,8 +137,8 @@ int main(int argc, char *const argv[]) {
         return EXIT_FAILURE;
     }
 
-    if (!options.useFixed) {
-        options.setInputFile();
+    if (::errorCount() > 0) {
+            return EXIT_FAILURE;
     }
 
     const IR::P4Program *program = nullptr;
@@ -146,9 +146,6 @@ int main(int argc, char *const argv[]) {
         program = P4Dummy::parseDummyP4(options);
     } else {
         options.setInputFile();
-        if (::errorCount() > 0) {
-            return EXIT_FAILURE;
-        }
         program = P4::parseP4File(options);
     }
 
