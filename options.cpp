@@ -1,6 +1,6 @@
 #include "options.h"
 
-namespace P4Dummy {
+namespace P4::P4Dummy {
 
 DummyOptions::DummyOptions() {
     registerOption(
@@ -12,4 +12,4 @@ DummyOptions::DummyOptions() {
         "Instead of parsing a real P4 program manipulate and parse a dummy program.");
 }
 
-}  // namespace P4Dummy
+}  // namespace P4::P4Dummy
