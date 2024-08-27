@@ -2,10 +2,9 @@
 #define _TOZ3_OPTIONS_H_
 
 #include "frontends/common/options.h"
-
 #include "frontends/common/parser_options.h"
 
-namespace P4Dummy {
+namespace P4::P4Dummy {
 
 class DummyOptions : public CompilerOptions {
  public:
@@ -22,6 +21,6 @@ class DummyOptions : public CompilerOptions {
 
 using P4DummyContext = P4CContextWithOptions<DummyOptions>;
 
-}  // namespace P4Dummy
+}  // namespace P4::P4Dummy
 
 #endif /* _TOZ3_OPTIONS_H_ */

@@ -1,32 +1,31 @@
-#include <stdlib.h>
 #include <iostream>
 
 #include "frontends/common/constantFolding.h"
-#include "frontends/common/parseInput.h"
-#include "frontends/p4/frontend.h"
-#include "frontends/p4/toP4/toP4.h"
-#include "ir/ir.h"
-#include "options.h"
-#include "test/gtest/helpers.h"
 #include "frontends/common/options.h"
+#include "frontends/common/parseInput.h"
 #include "frontends/common/parser_options.h"
 #include "frontends/common/resolveReferences/referenceMap.h"
+#include "frontends/p4/frontend.h"
+#include "frontends/p4/toP4/toP4.h"
 #include "frontends/p4/typeChecking/typeChecker.h"
 #include "frontends/p4/typeMap.h"
+#include "ir/ir.h"
 #include "ir/pass_manager.h"
 #include "ir/visitor.h"
 #include "lib/compile_context.h"
 #include "lib/cstring.h"
 #include "lib/error.h"
+#include "options.h"
+#include "test/gtest/helpers.h"
 
-namespace P4Dummy {
+namespace P4::P4Dummy {
 
 class MidEnd : public PassManager {
     P4::ReferenceMap refMap;
     P4::TypeMap typeMap;
 
  public:
-    explicit MidEnd() {
+    MidEnd() {
         addPasses({
             new P4::TypeChecking(&refMap, &typeMap, true),
             new P4::ConstantFolding(&refMap, &typeMap),
@@ -127,29 +126,29 @@ V1Switch(p(), vrfy(), ingress(), egress(), update(), deparser()) main;)";
     return P4::parseP4String(source, options.langVersion);
 }
 
-}  // namespace P4Dummy
+}  // namespace P4::P4Dummy
 
 int main(int argc, char *const argv[]) {
-    AutoCompileContext autoP4DummyContext(new P4Dummy::P4DummyContext);
-    auto &options = P4Dummy::P4DummyContext::get().options();
+    P4::AutoCompileContext autoP4DummyContext(new P4::P4Dummy::P4DummyContext);
+    auto &options = P4::P4Dummy::P4DummyContext::get().options();
 
     if (options.process(argc, argv) == nullptr) {
         return EXIT_FAILURE;
     }
 
-    if (::errorCount() > 0) {
-            return EXIT_FAILURE;
+    if (P4::errorCount() > 0) {
+        return EXIT_FAILURE;
     }
 
-    const IR::P4Program *program = nullptr;
+    const P4::IR::P4Program *program = nullptr;
     if (options.useFixed) {
-        program = P4Dummy::parseDummyP4(options);
+        program = P4::P4Dummy::parseDummyP4(options);
     } else {
         options.setInputFile();
         program = P4::parseP4File(options);
     }
 
-    if (program == nullptr && ::errorCount() != 0) {
+    if (program == nullptr && P4::errorCount() != 0) {
         return EXIT_FAILURE;
     }
 
@@ -171,14 +170,14 @@ int main(int argc, char *const argv[]) {
 
     std::cout << "\n############################## AFTER MID END ##############################\n";
     // Apply the mid end passes.
-    program = program->apply(P4Dummy::MidEnd());
+    program = program->apply(P4::P4Dummy::MidEnd());
 
     // Print the program after running front end passes.
     program->apply(top4);
 
     std::cout << "\n############################## CUSTOM VISITOR ##############################\n";
     // Apply a custom visitor that prints the parser states for the respective program.
-    program->apply(P4Dummy::ParserVisitor());
+    program->apply(P4::P4Dummy::ParserVisitor());
 
-    return ::errorCount() > 0 ? EXIT_FAILURE : EXIT_SUCCESS;
+    return P4::errorCount() > 0 ? EXIT_FAILURE : EXIT_SUCCESS;
 }
