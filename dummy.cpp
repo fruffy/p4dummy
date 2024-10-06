@@ -28,7 +28,7 @@ class MidEnd : public PassManager {
     MidEnd() {
         addPasses({
             new P4::TypeChecking(&refMap, &typeMap, true),
-            new P4::ConstantFolding(&refMap, &typeMap),
+            new P4::ConstantFolding(&typeMap),
         });
     }
 };
